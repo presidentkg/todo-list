@@ -1,0 +1,23 @@
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.delete-button {
+  background-color: #bb2b1b;
+  color: white;
+  border: black 1px solid;
+  padding: 5px 10px;
+}
+
+.inactive-button {
+  background-color: #ccc;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: not-allowed;
+}
+
+button{
+    cursor: pointer;
+}

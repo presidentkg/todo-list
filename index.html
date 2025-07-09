@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLANNED PLANTHOOD - Mina sidor</title>
+    <script src="dist/index.js" defer></script>
+    <link rel="stylesheet" href="index.css">    
+</head>
+<body>
+    <h1 id="title">To Do List</h1>
+    <div id="todo-container">
+        <form id="todo-form">
+            <label for="todo-input">Lägg till en ny uppgift:</label>
+            <input type="text" id="todo-text" placeholder="Skriv något...">
+            <input type="date" id="todo-date" placeholder="Välj datum">
+            <input type="time" id="todo-time" placeholder="Välj tid">
+            <button type="submit" id="add-todo-button">Lägg till</button>
+            <p id="empty-text"></p>
+            <p id="empty-date"></p>
+        </form>
+        <section>
+            <ul id="todo-list"></ul>
+            <button id="clear-todos-button">Rensa alla</button>
+        </section>
+    </div>
+</body>
