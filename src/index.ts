@@ -2,7 +2,8 @@ const todoContainer = document.getElementById('todo-container') as HTMLElement
 const todoText = document.getElementById('todo-text') as HTMLInputElement
 const todoDate = document.getElementById('todo-date') as HTMLInputElement
 const todoTime = document.getElementById('todo-time') as HTMLInputElement
-const todoList = document.getElementById('todo-list') as HTMLUListElement
+const todoList = document.getElementById('todo-list') as HTMLTableElement
+const todoListBody = document.getElementById('todo-tabel-body') as HTMLTableSectionElement
 const emptyText = document.getElementById('empty-text') as HTMLElement
 const emptyDate = document.getElementById('empty-date') as HTMLElement
 const todoForm = document.getElementById('todo-form') as HTMLFormElement
@@ -30,12 +31,48 @@ renderTodos()
 function renderTodos(): void{
     sortTodos()
     checkTodos()
-    todoList.innerHTML = ''
+    todoListBody.innerHTML = ''
     todos.forEach(todo => {
-        const li = document.createElement('li')
-        li.className = todo.completed ? 'completed' : ''
+        const tr = document.createElement('tr')
+        tr.className = todo.completed ? 'completed' : ''
 
-        const todoContent = document.createElement('span');
+        const tdDate = document.createElement('td')
+        tdDate.textContent = todo.date
+        tr.appendChild(tdDate)
+
+        const tdTime = document.createElement('td')
+        tdTime.textContent = todo.time || ''
+        tr.appendChild(tdTime)
+
+        const tdText = document.createElement('td')
+        const tdTextContent = document.createElement('span');
+        tdTextContent.textContent = todo.text
+        tdText.appendChild(tdTextContent)
+        tr.appendChild(tdText)
+
+        const tdCheckbox = document.createElement('td')
+        const checkbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.checked = todo.completed
+        checkbox.addEventListener('click', () => {
+            todo.completed = !todo.completed
+            renderTodos()
+        })
+        tdCheckbox.appendChild(checkbox)
+        tr.appendChild(tdCheckbox)
+
+        const tdDelete = document.createElement('td')
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent = 'X'; // Eller 'Ta bort'
+        deleteButton.className = 'delete-button';
+        deleteButton.addEventListener('click', () => {
+            todos = todos.filter(t => t.id !== todo.id);
+            renderTodos();
+        });
+        tdDelete.appendChild(deleteButton)
+        tr.appendChild(tdDelete)
+
+        /*const todoContent = document.createElement('span');
         todoContent.textContent = todo.date + ' ' + todo.time + ' ' + todo.text;
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -52,10 +89,10 @@ function renderTodos(): void{
             renderTodos();
         })
 
-        li.appendChild(todoContent);
-        li.appendChild(checkbox);
-        li.appendChild(deleteButton);
-        todoList.appendChild(li)
+        tr.appendChild(todoContent);
+        tr.appendChild(checkbox);
+        tr.appendChild(deleteButton);*/
+        todoListBody.appendChild(tr)
 
     })
 }
@@ -76,8 +113,8 @@ todoForm.addEventListener('submit', (event) => {
 
     let maxID = 0
     if (todos.length > 0) {
-        //maxID = Math.max(...todos.map(todo => todo.id)) + 1
-        maxID = todos.length
+        maxID = Math.max(...todos.map(todo => todo.id)) + 1
+        //maxID = todos.length
     }
     else {
         maxID = 1
