@@ -1,15 +1,18 @@
-"use strict";
+import { todos as testTodos } from './services/variables.js';
 const todoContainer = document.getElementById('todo-container');
 const todoText = document.getElementById('todo-text');
 const todoDate = document.getElementById('todo-date');
 const todoTime = document.getElementById('todo-time');
-const todoList = document.getElementById('todo-list');
-const todoListBody = document.getElementById('todo-tabel-body');
 const emptyText = document.getElementById('empty-text');
 const emptyDate = document.getElementById('empty-date');
 const todoForm = document.getElementById('todo-form');
+const todoCards = document.getElementById('todo-cards');
 const clearTodosButton = document.getElementById('clear-todos-button');
-let todos = [];
+//Avkommentera när testdata inte längre behövs
+//let todos: Todo[] = JSON.parse(localStorage.getItem('todos') || '[]')
+//Ta bort när testdata inte längre behövs
+let todos = JSON.parse(localStorage.getItem('todos') || JSON.stringify(testTodos));
+//
 function checkTodos() {
     if (todos.length === 0)
         clearTodosButton.className = 'inactive-button';
@@ -20,22 +23,34 @@ renderTodos();
 function renderTodos() {
     sortTodos();
     checkTodos();
-    todoListBody.innerHTML = '';
+    todoCards.innerHTML = '';
     todos.forEach(todo => {
-        const tr = document.createElement('tr');
-        tr.className = todo.completed ? 'completed' : '';
-        const tdDate = document.createElement('td');
-        tdDate.textContent = todo.date;
-        tr.appendChild(tdDate);
-        const tdTime = document.createElement('td');
-        tdTime.textContent = todo.time || '';
-        tr.appendChild(tdTime);
-        const tdText = document.createElement('td');
-        const tdTextContent = document.createElement('span');
-        tdTextContent.textContent = todo.text;
-        tdText.appendChild(tdTextContent);
-        tr.appendChild(tdText);
-        const tdCheckbox = document.createElement('td');
+        const article = document.createElement('article');
+        article.className = "todo-item";
+        /* const todoId = document.createElement('p')
+        todoId.className = "todo-id"
+        todoId.textContent = `${todo.id}`
+        article.appendChild(todoId) */
+        const cardHeadBody = document.createElement('div');
+        cardHeadBody.className = "card-head-body";
+        const cardHeader = document.createElement('div');
+        const todoDate = document.createElement('p');
+        cardHeader.className = "card-header";
+        todoDate.className = "todo-date";
+        todoDate.textContent = todo.date;
+        cardHeader.appendChild(todoDate);
+        if (todo.time) {
+            const todoTime = document.createElement('p');
+            todoTime.className = "todo-time";
+            todoTime.textContent = todo.time;
+            cardHeader.appendChild(todoTime);
+        }
+        const cardBody = document.createElement('div');
+        cardBody.className = "card-body";
+        const todoText = document.createElement('p');
+        todoText.className = "todo-text";
+        todoText.textContent = todo.text;
+        cardBody.appendChild(todoText);
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = todo.completed;
@@ -43,9 +58,9 @@ function renderTodos() {
             todo.completed = !todo.completed;
             renderTodos();
         });
-        tdCheckbox.appendChild(checkbox);
-        tr.appendChild(tdCheckbox);
-        const tdDelete = document.createElement('td');
+        cardBody.appendChild(checkbox);
+        const cardFooter = document.createElement('div');
+        cardFooter.className = "card-footer";
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'X'; // Eller 'Ta bort'
         deleteButton.className = 'delete-button';
@@ -53,29 +68,51 @@ function renderTodos() {
             todos = todos.filter(t => t.id !== todo.id);
             renderTodos();
         });
-        tdDelete.appendChild(deleteButton);
-        tr.appendChild(tdDelete);
-        /*const todoContent = document.createElement('span');
-        todoContent.textContent = todo.date + ' ' + todo.time + ' ' + todo.text;
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = todo.completed;
+        cardFooter.appendChild(deleteButton);
+        cardHeadBody.appendChild(cardHeader);
+        cardHeadBody.appendChild(cardBody);
+        article.appendChild(cardHeadBody);
+        article.appendChild(cardFooter);
+        todoCards.appendChild(article);
+        /* const tr = document.createElement('tr')
+        tr.className = todo.completed ? 'completed' : ''
+
+        const tdDate = document.createElement('td')
+        tdDate.textContent = todo.date
+        tr.appendChild(tdDate)
+
+        const tdTime = document.createElement('td')
+        tdTime.textContent = todo.time || ''
+        tr.appendChild(tdTime)
+
+        const tdText = document.createElement('td')
+        const tdTextContent = document.createElement('span');
+        tdTextContent.textContent = todo.text
+        tdText.appendChild(tdTextContent)
+        tr.appendChild(tdText)
+
+        const tdCheckbox = document.createElement('td')
+        const checkbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.checked = todo.completed
         checkbox.addEventListener('click', () => {
             todo.completed = !todo.completed
             renderTodos()
         })
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Ta bort';
+        tdCheckbox.appendChild(checkbox)
+        tr.appendChild(tdCheckbox)
+
+        const tdDelete = document.createElement('td')
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent = 'X'; // Eller 'Ta bort'
         deleteButton.className = 'delete-button';
         deleteButton.addEventListener('click', () => {
             todos = todos.filter(t => t.id !== todo.id);
             renderTodos();
-        })
-
-        tr.appendChild(todoContent);
-        tr.appendChild(checkbox);
-        tr.appendChild(deleteButton);*/
-        todoListBody.appendChild(tr);
+        });
+        tdDelete.appendChild(deleteButton)
+        tr.appendChild(tdDelete)
+        todoListBody.appendChild(tr) */
     });
 }
 todoForm.addEventListener('submit', (event) => {

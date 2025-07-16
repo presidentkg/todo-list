@@ -1,15 +1,15 @@
+import { todos as testTodos } from './services/variables.js';
 const todoContainer = document.getElementById('todo-container') as HTMLElement
 const todoText = document.getElementById('todo-text') as HTMLInputElement
 const todoDate = document.getElementById('todo-date') as HTMLInputElement
 const todoTime = document.getElementById('todo-time') as HTMLInputElement
-const todoList = document.getElementById('todo-list') as HTMLTableElement
-const todoListBody = document.getElementById('todo-tabel-body') as HTMLTableSectionElement
 const emptyText = document.getElementById('empty-text') as HTMLElement
 const emptyDate = document.getElementById('empty-date') as HTMLElement
 const todoForm = document.getElementById('todo-form') as HTMLFormElement
+const todoCards = document.getElementById('todo-cards') as HTMLElement
 const clearTodosButton = document.getElementById('clear-todos-button') as HTMLButtonElement
 
-interface Todo {
+export interface Todo {
   id: number
   text: string
   date: string
@@ -17,7 +17,14 @@ interface Todo {
   completed: boolean
 }
 
-let todos: Todo[] = []
+//Avkommentera när testdata inte längre behövs
+//let todos: Todo[] = JSON.parse(localStorage.getItem('todos') || '[]')
+
+//Ta bort när testdata inte längre behövs
+let todos: Todo[] = JSON.parse(localStorage.getItem('todos') || JSON.stringify(testTodos));
+//
+
+
 function checkTodos(): void {
     if(todos.length === 0)
         clearTodosButton.className = 'inactive-button';
@@ -31,9 +38,65 @@ renderTodos()
 function renderTodos(): void{
     sortTodos()
     checkTodos()
-    todoListBody.innerHTML = ''
+    todoCards.innerHTML = ''
     todos.forEach(todo => {
-        const tr = document.createElement('tr')
+        const article = document.createElement('article')
+        article.className = "todo-item"
+        
+        /* const todoId = document.createElement('p')
+        todoId.className = "todo-id"
+        todoId.textContent = `${todo.id}`
+        article.appendChild(todoId) */
+
+        const cardHeadBody = document.createElement('div')
+        cardHeadBody.className = "card-head-body"
+        const cardHeader = document.createElement('div')
+        const todoDate = document.createElement('p')        
+        cardHeader.className = "card-header"
+        todoDate.className = "todo-date"
+        todoDate.textContent = todo.date
+        cardHeader.appendChild(todoDate)
+
+        if (todo.time) {
+            const todoTime = document.createElement('p')
+            todoTime.className = "todo-time"
+            todoTime.textContent = todo.time
+            cardHeader.appendChild(todoTime)
+        }
+
+        const cardBody = document.createElement('div')
+        cardBody.className = "card-body"
+        const todoText = document.createElement('p')
+        todoText.className = "todo-text"
+        todoText.textContent = todo.text
+        cardBody.appendChild(todoText)
+
+        const checkbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.checked = todo.completed
+        checkbox.addEventListener('click', () => {
+            todo.completed = !todo.completed
+            renderTodos()
+        })
+        cardBody.appendChild(checkbox)
+
+        const cardFooter = document.createElement('div')
+        cardFooter.className = "card-footer"
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent = 'X'; // Eller 'Ta bort'
+        deleteButton.className = 'delete-button';
+        deleteButton.addEventListener('click', () => {
+            todos = todos.filter(t => t.id !== todo.id);
+            renderTodos();
+        });
+        cardFooter.appendChild(deleteButton)
+
+        cardHeadBody.appendChild(cardHeader)
+        cardHeadBody.appendChild(cardBody)
+        article.appendChild(cardHeadBody)
+        article.appendChild(cardFooter)
+        todoCards.appendChild(article)
+        /* const tr = document.createElement('tr')
         tr.className = todo.completed ? 'completed' : ''
 
         const tdDate = document.createElement('td')
@@ -71,28 +134,7 @@ function renderTodos(): void{
         });
         tdDelete.appendChild(deleteButton)
         tr.appendChild(tdDelete)
-
-        /*const todoContent = document.createElement('span');
-        todoContent.textContent = todo.date + ' ' + todo.time + ' ' + todo.text;
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = todo.completed;
-        checkbox.addEventListener('click', () => {
-            todo.completed = !todo.completed
-            renderTodos()
-        })
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Ta bort';
-        deleteButton.className = 'delete-button';
-        deleteButton.addEventListener('click', () => {
-            todos = todos.filter(t => t.id !== todo.id);
-            renderTodos();
-        })
-
-        tr.appendChild(todoContent);
-        tr.appendChild(checkbox);
-        tr.appendChild(deleteButton);*/
-        todoListBody.appendChild(tr)
+        todoListBody.appendChild(tr) */
 
     })
 }
